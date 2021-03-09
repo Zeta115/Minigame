@@ -170,7 +170,7 @@ void Start()
 	state.last_shot = 0;
 	state.scroll = 0;
 
-	state.currentScreen = 0;
+	state.currentScreen = TITLE;
 }
 
 // ----------------------------------------------------------------
@@ -319,11 +319,11 @@ void MoveStuff()
 	{
 	case LOGO:
 	{
-		if (state.keyboard[SDL_SCANCODE_RETURN] == KEY_DOWN) state.currentScreen = 1;
+		if (state.keyboard[SDL_SCANCODE_RETURN] == KEY_DOWN) state.currentScreen = LOGO;
 	} break;
 	case TITLE:
 	{
-		if (state.keyboard[SDL_SCANCODE_RETURN] == KEY_DOWN) state.currentScreen = 2;
+		if (state.keyboard[SDL_SCANCODE_RETURN] == KEY_DOWN) state.currentScreen = GAMEPLAY;
 	} break;
 	case GAMEPLAY:
 	{
