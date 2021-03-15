@@ -88,7 +88,8 @@ struct GlobalState
 
 	// Texture variables
 	SDL_Texture* background;
-	SDL_Texture* ship;
+	SDL_Texture* player1;
+	SDL_Texture* player2; // Segunda nave
 	SDL_Texture* shot;
 	int background_width;
 
@@ -97,9 +98,12 @@ struct GlobalState
 	Mix_Chunk* fx_shoot;
 
 	// Game elements
-	int ship_x;
-	int ship_y;
+	int player1_x;
+	int player1_y;
 	Projectile shots[MAX_SHIP_SHOTS];
+	int player2_x;
+	int player2_y;
+	Projectile shots2[MAX_SHIP_SHOTS];
 	int last_shot;
 	int scroll;
 
@@ -149,8 +153,9 @@ void Start()
 
 	// Init image system and load textures
 	IMG_Init(IMG_INIT_PNG);
-	state.background = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/background.png"));
-	state.ship = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/ship.png"));
+	state.background = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/background3.png"));
+	state.player1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/ship.png"));
+	state.player2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/ship.png"));
 	state.shot = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot.png"));
 	SDL_QueryTexture(state.background, NULL, NULL, &state.background_width, NULL);
 
@@ -165,8 +170,10 @@ void Start()
 	//Mix_PlayMusic(state.music, -1);
 
 	// Init game variables
-	state.ship_x = 100;
-	state.ship_y = SCREEN_HEIGHT / 2;
+	state.player1_x = 100;
+	state.player1_y = SCREEN_HEIGHT / 2;
+	state.player2_x = 100;
+	state.player2_y = SCREEN_HEIGHT / 2;
 	state.last_shot = 0;
 	state.scroll = 0;
 
@@ -184,7 +191,8 @@ void Finish()
 
 	// Unload textures and deinitialize image system
 	SDL_DestroyTexture(state.background);
-	SDL_DestroyTexture(state.ship);
+	SDL_DestroyTexture(state.player1);
+	SDL_DestroyTexture(state.player2);
 	SDL_DestroyTexture(state.shot);
 	IMG_Quit();
 
@@ -328,11 +336,18 @@ void MoveStuff()
 	case GAMEPLAY:
 	{
 		// L2: DONE 7: Move the ship with arrow keys
-		if (state.keyboard[SDL_SCANCODE_UP] == KEY_REPEAT) state.ship_y -= SHIP_SPEED;
-		else if (state.keyboard[SDL_SCANCODE_DOWN] == KEY_REPEAT) state.ship_y += SHIP_SPEED;
+		if (state.keyboard[SDL_SCANCODE_UP] == KEY_REPEAT) state.player1_y -= SHIP_SPEED;
+		else if (state.keyboard[SDL_SCANCODE_DOWN] == KEY_REPEAT) state.player1_y += SHIP_SPEED;
 
-		if (state.keyboard[SDL_SCANCODE_LEFT] == KEY_REPEAT) state.ship_x -= SHIP_SPEED;
-		else if (state.keyboard[SDL_SCANCODE_RIGHT] == KEY_REPEAT) state.ship_x += SHIP_SPEED;
+		if (state.keyboard[SDL_SCANCODE_LEFT] == KEY_REPEAT) state.player1_x -= SHIP_SPEED;
+		else if (state.keyboard[SDL_SCANCODE_RIGHT] == KEY_REPEAT) state.player1_x += SHIP_SPEED;
+
+		//intento de mover la nave2
+		if (state.keyboard[SDL_SCANCODE_W] == KEY_REPEAT) state.player2_y -= SHIP_SPEED;
+		else if (state.keyboard[SDL_SCANCODE_S] == KEY_REPEAT) state.player2_y += SHIP_SPEED;
+
+		if (state.keyboard[SDL_SCANCODE_A] == KEY_REPEAT) state.player2_x -= SHIP_SPEED;
+		else if (state.keyboard[SDL_SCANCODE_D] == KEY_REPEAT) state.player2_x += SHIP_SPEED;
 
 		// L2: DONE 8: Initialize a new shot when SPACE key is pressed
 		if (state.keyboard[SDL_SCANCODE_SPACE] == KEY_DOWN)
@@ -340,21 +355,51 @@ void MoveStuff()
 			if (state.last_shot == MAX_SHIP_SHOTS) state.last_shot = 0;
 
 			state.shots[state.last_shot].alive = true;
-			state.shots[state.last_shot].x = state.ship_x + 35;
-			state.shots[state.last_shot].y = state.ship_y - 3;
+			state.shots[state.last_shot].x = state.player1_x + 35;
+			state.shots[state.last_shot].y = state.player2_y - 3;
 			state.last_shot++;
 
 			// L4: TODO 4: Play sound fx_shoot
+
 			Mix_PlayChannel(-1, state.fx_shoot, 0);
+
 		}
 
-		// Update active shots
+		// PLAYER 2!!
+
+		if (state.keyboard[SDL_SCANCODE_RETURN] == KEY_DOWN)
+		{
+			if (state.last_shot == MAX_SHIP_SHOTS) state.last_shot = 0;
+
+			state.shots2[state.last_shot].alive = true;
+			state.shots2[state.last_shot].x = state.player2_x + 35;
+			state.shots2[state.last_shot].y = state.player2_y - 3;
+			state.last_shot++;
+
+			// L4: TODO 4: Play sound fx_shoot
+
+			Mix_PlayChannel(-1, state.fx_shoot, 0);
+
+		}
+
+		// Update active shots 
+		// SHOTS DEL PLAYER1
 		for (int i = 0; i < MAX_SHIP_SHOTS; ++i)
 		{
 			if (state.shots[i].alive)
 			{
 				if (state.shots[i].x < SCREEN_WIDTH) state.shots[i].x += SHOT_SPEED;
 				else state.shots[i].alive = false;
+			}
+		}
+
+		// SHOTS PLAYER 2
+		for (int i = 0; i < MAX_SHIP_SHOTS; ++i)
+		{
+			if (state.shots2[i].alive)
+			{
+				if (state.shots2[i].x < SCREEN_WIDTH) state.shots2[i].x += SHOT_SPEED;
+				else state.shots2[i].alive = false;
 			}
 		}
 	} break;
@@ -400,8 +445,12 @@ void Draw()
 		//DrawRectangle(state.ship_x, state.ship_y, 250, 100, { 255, 0, 0, 255 });
 
 		// Draw ship texture
-		rec.x = state.ship_x; rec.y = state.ship_y; rec.w = 64; rec.h = 64;
-		SDL_RenderCopy(state.renderer, state.ship, NULL, &rec);
+		rec.x = state.player1_x; rec.y = state.player1_y; rec.w = 64; rec.h = 64;
+		SDL_RenderCopy(state.renderer, state.player1, NULL, &rec);
+
+		// draw player 2
+		rec.x = state.player2_x; rec.y = state.player2_y; rec.w = 64; rec.h = 64;
+		SDL_RenderCopy(state.renderer, state.player2, NULL, &rec);
 
 		// L2: DONE 9: Draw active shots
 		rec.w = 64; rec.h = 64;
@@ -411,6 +460,18 @@ void Draw()
 			{
 				//DrawRectangle(state.shots[i].x, state.shots[i].y, 50, 20, { 0, 250, 0, 255 });
 				rec.x = state.shots[i].x; rec.y = state.shots[i].y;
+				SDL_RenderCopy(state.renderer, state.shot, NULL, &rec);
+			}
+		}
+
+		// draw active shots player2
+		rec.w = 64; rec.h = 64;
+		for (int i = 0; i < MAX_SHIP_SHOTS; ++i)
+		{
+			if (state.shots2[i].alive)
+			{
+				//DrawRectangle(state.shots[i].x, state.shots[i].y, 50, 20, { 0, 250, 0, 255 });
+				rec.x = state.shots2[i].x; rec.y = state.shots2[i].y;
 				SDL_RenderCopy(state.renderer, state.shot, NULL, &rec);
 			}
 		}
