@@ -34,7 +34,7 @@
 #define JOYSTICK_DEAD_ZONE  8000
 
 #define SHIP_SPEED			   8
-#define MAX_SHIP_SHOTS		  32
+#define MAX_SHIP_SHOTS		  6
 #define SHOT_SPEED			  12
 #define SCROLL_SPEED		   5
 
