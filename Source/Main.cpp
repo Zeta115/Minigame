@@ -180,10 +180,10 @@ void Start()
 	//Mix_PlayMusic(state.music, -1);
 
 	// Init game variables
-	state.player1_x = 100;
-	state.player1_y = SCREEN_HEIGHT / 2;
-	state.player2_x = 100;
-	state.player2_y = SCREEN_HEIGHT / 2;
+	state.player1_x = SCREEN_WIDTH/2;
+	state.player1_y = 60;
+	state.player2_x = SCREEN_WIDTH/2;
+	state.player2_y = 620;
 	state.last_shot1 = 0;
 	state.last_shot2 = 0;
 	state.scroll = 0;
@@ -360,11 +360,11 @@ void MoveStuff()
 		else if (state.keyboard[SDL_SCANCODE_RIGHT] == KEY_REPEAT && state.player1_x < 1100) state.player1_x += SHIP_SPEED;
 
 		//intento de mover la nave2
-		if (state.keyboard[SDL_SCANCODE_W] == KEY_REPEAT && state.player2_y > 380) state.player2_y -= SHIP_SPEED;
-		else if (state.keyboard[SDL_SCANCODE_S] == KEY_REPEAT) state.player2_y += SHIP_SPEED;
+		if (state.keyboard[SDL_SCANCODE_W] == KEY_REPEAT && state.player2_y > 370) state.player2_y -= SHIP_SPEED;
+		else if (state.keyboard[SDL_SCANCODE_S] == KEY_REPEAT && state.player2_y < 620) state.player2_y += SHIP_SPEED;
 
-		if (state.keyboard[SDL_SCANCODE_A] == KEY_REPEAT) state.player2_x -= SHIP_SPEED;
-		else if (state.keyboard[SDL_SCANCODE_D] == KEY_REPEAT) state.player2_x += SHIP_SPEED;
+		if (state.keyboard[SDL_SCANCODE_A] == KEY_REPEAT && state.player2_x > 100) state.player2_x -= SHIP_SPEED;
+		else if (state.keyboard[SDL_SCANCODE_D] == KEY_REPEAT && state.player2_x < 1100) state.player2_x += SHIP_SPEED;
 
 		// L2: DONE 8: Initialize a new shot when SPACE key is pressed
 		
