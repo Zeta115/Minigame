@@ -133,7 +133,7 @@ void Start()
 	// Initialize SDL internal global state
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	// Init input events system
+	// Init input events systemSDL_SetRenderDrawColor
 	//if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0) printf("SDL_EVENTS could not be initialized! SDL_Error: %s\n", SDL_GetError());
 
 	// Init window
@@ -142,7 +142,7 @@ void Start()
 
 	// Init renderer
 	state.renderer = SDL_CreateRenderer(state.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	SDL_SetRenderDrawColor(state.renderer, 100, 149, 237, 255);		// Default clear color: Cornflower blue
+	SDL_SetRenderDrawColor(state.renderer, 000, 000, 000, 255);		// Default clear color: Cornflower blue
 
 	// L2: DONE 1: Init input variables (keyboard, mouse_buttons)
 	state.keyboard = (KeyState*)calloc(sizeof(KeyState) * MAX_KEYBOARD_KEYS, 1);
@@ -159,13 +159,14 @@ void Start()
 
 	// Init image system and load textures
 	IMG_Init(IMG_INIT_PNG);
+	state.logo = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/logo.png"));
+	state.title = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/title.png"));
 	state.background = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/background.png"));
 	state.player1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player1.png"));
 	state.player2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player2.png"));
 	state.shot = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_1.png"));
 	state.shot2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_2.png"));
-	state.logo = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/logo.png"));
-	state.title = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/title.png"));
+	
 	SDL_QueryTexture(state.background, NULL, NULL, &state.background_width, NULL);
 
 	// L4: TODO 1: Init audio system and load music/fx
@@ -187,7 +188,9 @@ void Start()
 	state.last_shot2 = 0;
 	state.scroll = 0;
 
-	state.currentScreen = TITLE;
+	state.currentScreen = LOGO;
+
+
 }
 
 // ----------------------------------------------------------------
@@ -200,6 +203,8 @@ void Finish()
 	Mix_Quit();
 
 	// Unload textures and deinitialize image system
+	SDL_DestroyTexture(state.logo);
+	SDL_DestroyTexture(state.title);
 	SDL_DestroyTexture(state.background);
 	SDL_DestroyTexture(state.player1);
 	SDL_DestroyTexture(state.player2);
@@ -430,18 +435,20 @@ void MoveStuff()
 void Draw()
 {
 	// Clear screen to Cornflower blue
-	SDL_SetRenderDrawColor(state.renderer, 100, 149, 237, 255);
+	SDL_SetRenderDrawColor(state.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(state.renderer);
 
 	switch (state.currentScreen)
 	{
 	case LOGO:
 	{
-
+		SDL_Rect rec = {450, 0, SCREEN_WIDTH/3, SCREEN_HEIGHT};
+		SDL_RenderCopy(state.renderer, state.logo, NULL, &rec);
 	} break;
 	case TITLE:
 	{
-
+		SDL_Rect rec = { -state.scroll, 230, state.background_width, SCREEN_HEIGHT/2 };
+		SDL_RenderCopy(state.renderer, state.title, NULL, &rec);
 	} break;
 	case GAMEPLAY:
 	{
