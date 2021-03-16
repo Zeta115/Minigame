@@ -16,3 +16,7 @@ In this minigame for two players you're on a duel to death with your guns
 >- Alex Garcia
 
 >- Roger Rus
+>
+## License
+
+This project is licensed under an unmodified MIT license, which is an OSI-certified license that allows static linking with closed source software. 
