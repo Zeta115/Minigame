@@ -4,7 +4,7 @@
 In this minigame for two players you're on a duel to death with your guns.
 
 ## Key Features
-- You have 3 bullets.
+- You have 3 bullets at the same time.
 - You have 1 life.
 - Is a 2 Player game.
 
