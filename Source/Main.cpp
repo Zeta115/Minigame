@@ -492,12 +492,12 @@ void Draw()
 			if (state.shots[i].alive)
 			{
 				//DrawRectangle(state.shots[i].x, state.shots[i].y, 50, 20, { 0, 250, 0, 255 });
-				rec.x = state.shots[i].x; 
+				rec.x = state.shots[i].x;
 				rec.y = state.shots[i].y;
 				SDL_RenderCopy(state.renderer, state.shotT, NULL, &rec);
 
 				//if (state.shots->x < state.player2_x+20|| state.shots->x > state.player2_x - 20 && state.shots->y == state.player2_y)state.background = state.win1;
-				if (state.shots->y <= state.player2_y && state.shots->y >= state.player2_y + 64 && state.shots->x >= state.player2_x&& state.shots->x <= state.player2_x + 64)state.background = state.win1;
+				if (state.shots->y >= state.player2_y && state.shots->y <= state.player2_y + 64 && state.shots->x >= state.player2_x && state.shots->x <= state.player2_x + 64)state.background = state.win1;
 			}
 		}
 
@@ -512,7 +512,7 @@ void Draw()
 				rec.x = state.shots2[i].x; 
 				rec.y = state.shots2[i].y;
 				SDL_RenderCopy(state.renderer, state.shotT2, NULL, &rec);
-				if (state.shots2->x == state.player1_x && state.shots2->y == state.player1_y)state.background = state.win2;
+				if (state.shots2->y >= state.player1_y && state.shots2->y <= state.player1_y + 64 && state.shots2->x >= state.player1_x && state.shots2->x <= state.player1_x + 64)state.background = state.win2;
 			}
 		}
 		
