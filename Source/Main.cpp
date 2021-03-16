@@ -495,12 +495,9 @@ void Draw()
 				rec.x = state.shots[i].x; 
 				rec.y = state.shots[i].y;
 				SDL_RenderCopy(state.renderer, state.shotT, NULL, &rec);
-				if (state.shots->x == state.player2_x && state.shots->y == state.player2_y)
-				{
-					SDL_Rect rec = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-					SDL_RenderCopy(state.renderer, state.win1, NULL, &rec);
-					state.background = state.win1;
-				}
+
+				if (state.shots->x == state.player2_x && state.shots->y == state.player2_y)state.background = state.win1;	
+				
 			}
 		}
 
@@ -515,12 +512,7 @@ void Draw()
 				rec.x = state.shots2[i].x; 
 				rec.y = state.shots2[i].y;
 				SDL_RenderCopy(state.renderer, state.shotT2, NULL, &rec);
-				if (state.shots2->x == state.player1_x && state.shots2->y == state.player1_y)
-				{
-					SDL_Rect rec = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-					SDL_RenderCopy(state.renderer, state.win2, NULL, &rec);
-					state.background = state.win2;
-				}
+				if (state.shots2->x == state.player1_x && state.shots2->y == state.player1_y)state.background = state.win2;
 			}
 		}
 		
