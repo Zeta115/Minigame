@@ -94,8 +94,10 @@ struct GlobalState
 	SDL_Texture* background;
 	SDL_Texture* player1;
 	SDL_Texture* player2; // Segunda nave
-	SDL_Texture* shot;
-	SDL_Texture* shot2;
+	SDL_Texture* shotT;
+	SDL_Texture* shotT2;
+	SDL_Texture* win1;
+	SDL_Texture* win2;
 	int background_width;
 
 	// Audio variables
@@ -164,8 +166,10 @@ void Start()
 	state.background = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/background.png"));
 	state.player1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player1.png"));
 	state.player2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player2.png"));
-	state.shot = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_1.png"));
-	state.shot2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_2.png"));
+	state.shotT = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_1.png"));
+	state.shotT2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_2.png"));
+	state.win1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player1_win.png"));
+	state.win2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player2_win.png"));
 	
 	SDL_QueryTexture(state.background, NULL, NULL, &state.background_width, NULL);
 
@@ -208,8 +212,8 @@ void Finish()
 	SDL_DestroyTexture(state.background);
 	SDL_DestroyTexture(state.player1);
 	SDL_DestroyTexture(state.player2);
-	SDL_DestroyTexture(state.shot);
-	SDL_DestroyTexture(state.shot2);
+	SDL_DestroyTexture(state.shotT);
+	SDL_DestroyTexture(state.shotT2);
 	IMG_Quit();
 
 	// L2: DONE 3: Close game controller
@@ -352,6 +356,7 @@ void MoveStuff()
 	} break;
 	case GAMEPLAY:
 	{
+		Mix_PlayMusic(state.music, 1);
 		// L2: DONE 7: Move the ship with arrow keys
 		if (state.keyboard[SDL_SCANCODE_UP] == KEY_REPEAT&& state.player1_y>50) state.player1_y -= SHIP_SPEED;
 		else if (state.keyboard[SDL_SCANCODE_DOWN] == KEY_REPEAT && state.player1_y < 310) state.player1_y += SHIP_SPEED;
@@ -396,6 +401,7 @@ void MoveStuff()
 			state.shots2[state.last_shot2].y = state.player2_y;
 			state.last_shot2++;
 
+			
 			// L4: TODO 4: Play sound fx_shoot
 
 			Mix_PlayChannel(-1, state.fx_shoot, 0);
@@ -488,7 +494,13 @@ void Draw()
 				//DrawRectangle(state.shots[i].x, state.shots[i].y, 50, 20, { 0, 250, 0, 255 });
 				rec.x = state.shots[i].x; 
 				rec.y = state.shots[i].y;
-				SDL_RenderCopy(state.renderer, state.shot, NULL, &rec);
+				SDL_RenderCopy(state.renderer, state.shotT, NULL, &rec);
+				if (state.shots->x == state.player2_x && state.shots->y == state.player2_y)
+				{
+					SDL_Rect rec = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+					SDL_RenderCopy(state.renderer, state.win1, NULL, &rec);
+					state.background = state.win1;
+				}
 			}
 		}
 
@@ -502,9 +514,16 @@ void Draw()
 				//DrawRectangle(state.shots[i].x, state.shots[i].y, 50, 20, { 0, 250, 0, 255 });
 				rec.x = state.shots2[i].x; 
 				rec.y = state.shots2[i].y;
-				SDL_RenderCopy(state.renderer, state.shot2, NULL, &rec);
+				SDL_RenderCopy(state.renderer, state.shotT2, NULL, &rec);
+				if (state.shots2->x == state.player1_x && state.shots2->y == state.player1_y)
+				{
+					SDL_Rect rec = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+					SDL_RenderCopy(state.renderer, state.win2, NULL, &rec);
+					state.background = state.win2;
+				}
 			}
 		}
+		
 	} break;
 	case ENDING:
 	{
