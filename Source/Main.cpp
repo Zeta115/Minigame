@@ -161,15 +161,15 @@ void Start()
 
 	// Init image system and load textures
 	IMG_Init(IMG_INIT_PNG);
-	state.logo = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/logo.png"));
-	state.title = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/title.png"));
-	state.background = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/background.png"));
-	state.player1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player1.png"));
-	state.player2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player2.png"));
-	state.shotT = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_1.png"));
-	state.shotT2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/shot_2.png"));
-	state.win1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player1_win.png"));
-	state.win2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player2_win.png"));
+	state.logo = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/screens/logo.png"));
+	state.title = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/screens/title.png"));
+	state.background = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/screens/background.png"));
+	state.player1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player/player1.png"));
+	state.player2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player/player2.png"));
+	state.shotT = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player/shot_1.png"));
+	state.shotT2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/player/shot_2.png"));
+	state.win1 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/screens/player1_win.png"));
+	state.win2 = SDL_CreateTextureFromSurface(state.renderer, IMG_Load("Assets/screens/player2_win.png"));
 	
 	SDL_QueryTexture(state.background, NULL, NULL, &state.background_width, NULL);
 
@@ -177,11 +177,11 @@ void Start()
 	// EXTRA: Handle the case the sound can not be loaded!
 	Mix_Init(MIX_INIT_OGG);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-	state.music = Mix_LoadMUS("Assets/music.ogg");
-	state.fx_shoot = Mix_LoadWAV("Assets/gunshot.wav");
+	state.music = Mix_LoadMUS("Assets/audio/music.ogg");
+	state.fx_shoot = Mix_LoadWAV("Assets/audio/gunshot.wav");
 
 	// L4: TODO 2: Start playing loaded music
-	//Mix_PlayMusic(state.music, -1);
+	Mix_PlayMusic(state.music, -1);
 
 	// Init game variables
 	state.player1_x = SCREEN_WIDTH/2;
@@ -496,8 +496,8 @@ void Draw()
 				rec.y = state.shots[i].y;
 				SDL_RenderCopy(state.renderer, state.shotT, NULL, &rec);
 
-				if (state.shots->x == state.player2_x && state.shots->y == state.player2_y)state.background = state.win1;	
-				
+				//if (state.shots->x < state.player2_x+20|| state.shots->x > state.player2_x - 20 && state.shots->y == state.player2_y)state.background = state.win1;
+				if (state.shots->y <= state.player2_y && state.shots->y >= state.player2_y + 64 && state.shots->x >= state.player2_x&& state.shots->x <= state.player2_x + 64)state.background = state.win1;
 			}
 		}
 
