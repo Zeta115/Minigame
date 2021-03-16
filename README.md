@@ -1,7 +1,12 @@
 # 3 shooter minigame
 
+## Description
+In this minigame for two players you're on a duel to death with your guns.
+
 ## Key Features
-In this minigame for two players you're on a duel to death with your guns
+- You have 3 bullets.
+- You have 1 life.
+- Is a 2 Player game.
 
 ## Controls
 - player 1 moves with the Up,Down, Left and Right arrows and shoots with return
